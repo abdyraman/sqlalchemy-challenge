@@ -59,18 +59,22 @@ def welcome():
 def precipitation():
     """Return precipitation data for the last year."""
     # Calculate the date 1 year ago from today
-    last_year = dt.date.today() - dt.timedelta(days=365)
-
+    last_year = dt.date(2017,8,23)-dt.timedelta(days=365)
+    print(last_year)
+    
     # Query the database for precipitation data
     results = session.query(Measurement.date, Measurement.prcp).\
         filter(Measurement.date >= last_year).all()
-
+    print(results)
+    
     # Convert the query results to a dictionary with date as the key and prcp as the value
     precip_dict = {}
     for result in results:
         date = result[0]
         prcp = result[1]
         precip_dict[date] = prcp
+        
+    session.close()
 
     # Return the JSON representation of the dictionary
     return jsonify(precip_dict)
@@ -121,4 +125,4 @@ def temperature(start, end=None):
 
 # run the app
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
